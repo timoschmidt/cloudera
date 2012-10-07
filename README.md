@@ -61,6 +61,6 @@ See `attributes/default.rb` for default values.
 Run a Map Reduce example
 =========================
     sudo su hdfs
-    hadoop jar MapReduceTest-1.0-job.jar /tmp/Test.txt /tmp/TestOut
     hadoop fs -put Test.txt /tmp
+    hadoop jar /usr/lib/hadoop-0.20-mapreduce/hadoop-examples.jar wordcount /tmp/Test.txt /tmp/TestOut3
     hadoop fs -text /tmp/TestOut/part-r-00000
