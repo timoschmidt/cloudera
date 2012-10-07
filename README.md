@@ -6,12 +6,13 @@ Requires Java
 
 
 
-roles/cloudera.rb
+Use Role roles/cloudera.rb
+===========================
 
 Its best to install with the current role definition
 
-name "cloudera"
-description "Install Oracle Java on Ubuntu and Cloudera"
+    name "cloudera"
+    description "Install Oracle Java on Ubuntu and Cloudera"
 
     default_attributes(
       :java => {
@@ -55,3 +56,11 @@ Attributes
 See `attributes/default.rb` for default values.
 
 * default['cloudera']['installyarn'] (defaults to false, set to true if you want to try the new YARN and MR2)
+
+
+Run a Map Reduce example
+=========================
+    sudo su hdfs
+    hadoop jar MapReduceTest-1.0-job.jar /tmp/Test.txt /tmp/TestOut
+    hadoop fs -put Test.txt /tmp
+    hadoop fs -text /tmp/TestOut/part-r-00000

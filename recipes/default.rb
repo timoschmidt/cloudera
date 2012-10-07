@@ -55,9 +55,21 @@ cookbook_file "/tmp/hadoop-hdfs-stop.sh" do
     source "hadoop-hdfs-stop.sh"
     mode "0744"
 end
-# helper to preare folder structure for first time
+cookbook_file "/tmp/hadoop-0.20-mapreduce-start.sh" do
+    source "hadoop-0.20-mapreduce-start.sh"
+    mode "0744"
+end
+cookbook_file "/tmp/hadoop-0.20-mapreduce-stop.sh" do
+    source "hadoop-0.20-mapreduce-stop.sh"
+    mode "0744"
+end
+# helper to prepare folder structure for first time
 cookbook_file "/tmp/prepare-yarn.sh" do
     source "prepare-yarn.sh"
+    mode "0777"
+end
+cookbook_file "/tmp/prepare-0.20-mapreduce.sh" do
+    source "prepare-0.20-mapreduce.sh"
     mode "0777"
 end
 
@@ -71,19 +83,33 @@ execute "format namenode" do
 end
 
 
-# now hadopp should run and this should work: http://localhost:50070/ :
+# now hadopp should run and this should work: http://localhost:50070:
 execute "/tmp/hadoop-hdfs-start.sh"
 
+if node['cloudera']['installyarn'] == false
+    execute "/tmp/hadoop-0.20-mapreduce-start.sh"
+end
 
 
 
 # Prepare folders (only first run)
 # TODO: only do this if "hadoop fs -ls /tmp" return "No such file or directory"
 ################
-execute "/tmp/prepare-yarn.sh" do
- user "hdfs"
- not_if 'hadoop fs -ls / | grep "/tmp"'
+
+if node['cloudera']['installyarn'] == true
+    execute "/tmp/prepare-yarn.sh" do
+     user "hdfs"
+     not_if 'hadoop fs -ls -R / | grep "/tmp/hadoop-yarn"'
+    end
+else
+    execute "/tmp/prepare-0.20-mapreduce.sh" do
+     user "hdfs"
+     not_if 'hadoop fs -ls -R / | grep "/var/lib/hadoop-hdfs/cache/mapred"'
+    end
 end
+
+
+
 
 
 
