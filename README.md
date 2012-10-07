@@ -2,14 +2,24 @@ Description
 ===========
 
 Installs Cloudera Pseudo according to the description on the website of Cloudera.
-Requires Java
+( https://ccp.cloudera.com/display/CDH4DOC/Installing+CDH4+on+a+Single+Linux+Node+in+Pseudo-distributed+Mode#InstallingCDH4onaSingleLinuxNodeinPseudo-distributedMode-InstallingCDH4withYARNonaSingleLinuxNodeinPseudodistributedmode )
+
+Requires the java cookbook as well: https://github.com/opscode-cookbooks/java
 
 
 
-Use Role roles/cloudera.rb
+Cookbooks
+===========================
+* cloudera (default) - Installs cloudera in the Pseudo mode (all on one) and runs hadoop
+* cloudera::flume - Installs flume
+* cloudera::hbase - Installs hbase
+
+
+How to use
 ===========================
 
-Its best to install with the current role definition
+
+Its best to install with the current role definition. Create a file roles/cloudera.rb
 
     name "cloudera"
     description "Install Oracle Java on Ubuntu and Cloudera"
@@ -37,10 +47,32 @@ Its best to install with the current role definition
     run_list(
         "recipe[java]",
         "recipe[cloudera]",
-        "recipe[cloudera::flume]"
+        "recipe[cloudera::flume]",
+        "recipe[cloudera::hbase]"
     )
 
+You may want to use it with a Vagrant vbox. Create a Vagrantfile like this:
 
+    # -*- mode: ruby -*-
+    # vi: set ft=ruby :
+    Vagrant::Config.run do |config|
+        config.vm.box = "precise64"
+
+        config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+
+
+
+        config.vm.network :hostonly, "192.168.33.10"
+
+        config.vm.provision :chef_solo do |chef|
+           chef.cookbooks_path = "cookbooks"
+           chef.roles_path = "roles"
+           chef.add_role "cloudera"
+         end
+
+      #   chef.validation_client_name = "ORGNAME-validator"
+      config.vm.customize ["modifyvm", :id,"--memory", "2048"]
+    end
 
 Requirements
 ============
@@ -55,7 +87,7 @@ Attributes
 
 See `attributes/default.rb` for default values.
 
-* default['cloudera']['installyarn'] (defaults to false, set to true if you want to try the new YARN and MR2)
+* `default['cloudera']['installyarn']` (defaults to false, set to true if you want to try the new YARN and MR2)
 
 
 Run a Map Reduce example
