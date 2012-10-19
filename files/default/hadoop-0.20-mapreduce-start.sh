@@ -1,5 +1,4 @@
 #!/bin/bash
-for service in /etc/init.d/hadoop-0.20-mapreduce-*
-do
-sudo $service start
-done
+
+sudo /etc/init.d/hadoop-0.20-mapreduce-jobtracker start
+sudo /etc/init.d/hadoop-0.20-mapreduce-tasktracker start
