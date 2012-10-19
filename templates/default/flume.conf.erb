@@ -1,0 +1,31 @@
+# example.conf: A single-node Flume configuration
+
+# Name the components on this agent
+agent-hdfs.sources = source1
+agent-hdfs.sinks = sink1
+agent-hdfs.channels = channel1
+
+# Describe/configure source1
+agent-hdfs.sources.source1.type = avro
+agent-hdfs.sources.source1.bind = 0.0.0.0
+agent-hdfs.sources.source1.port = 1998
+agent-hdfs.sources.source1.interceptors = inter1
+agent-hdfs.sources.source1.interceptors.inter1.type = timestamp
+
+# Describe sink1
+agent-hdfs.sinks.sink1.type = hdfs
+agent-hdfs.sinks.sink1.hdfs.path = /flume/events/%y-%m-%d/%H%M/%S
+agent-hdfs.sinks.sink1.hdfs.filePrefix = events-
+agent-hdfs.sinks.sink1.hdfs.fileType = DataStream
+agent-hdfs.sinks.sink1.hdfs.round = true
+agent-hdfs.sinks.sink1.hdfs.roundValue = 10
+agent-hdfs.sinks.sink1.hdfs.roundUnit = minute
+
+# Use a channel which buffers events in memory
+agent-hdfs.channels.channel1.type = memory
+agent-hdfs.channels.channel1.capacity = 1000
+agent-hdfs.channels.channel1.transactionCapactiy = 100
+
+# Bind the source and sink to the channel
+agent-hdfs.sources.source1.channels = channel1
+agent-hdfs.sinks.sink1.channel = channel1
