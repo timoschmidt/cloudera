@@ -48,6 +48,7 @@ Its best to install with the current role definition. Create a file roles/cloude
         "recipe[java]",
         "recipe[cloudera]",
         "recipe[cloudera::flume]",
+        "recipe[cloudera::pig]",
         "recipe[cloudera::hbase]"
     )
 

@@ -83,14 +83,21 @@ execute "format namenode" do
 end
 
 
+# Jobtracker repeats - was the only way to get both together
+%w{jobtracker tasktracker}.each { |name|
+  service "hadoop-0.20-mapreduce-#{name}" do
+    supports :status => true, :restart => true, :reload => true
+    action [ :enable, :start ]
+  end
+} if !node['cloudera']['installyarn']
+
 # now hadopp should run and this should work: http://localhost:50070:
-execute "/tmp/hadoop-hdfs-start.sh"
-
-if node['cloudera']['installyarn'] == false
-    execute "/tmp/hadoop-0.20-mapreduce-start.sh"
-end
-
-
+%w(datanode namenode secondarynamenode).each { |name|
+  service "hadoop-hdfs-#{name}" do
+    supports :status => true, :restart => true, :reload => true
+    action [ :enable, :start ]
+  end
+}
 
 # Prepare folders (only first run)
 # TODO: only do this if "hadoop fs -ls /tmp" return "No such file or directory"
