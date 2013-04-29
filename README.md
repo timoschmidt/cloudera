@@ -38,6 +38,9 @@ Its best to install with the current role definition. Create a file roles/cloude
         "install_flavor" => "oracle"
       },
       "cloudera" => {
+      	# Can be 3 or 4
+     	"version" => 4
+     	# Will only work with 4
         "installyarn" => false
       }
     )
@@ -57,12 +60,9 @@ You may want to use it with a Vagrant vbox. Create a Vagrantfile like this:
     # -*- mode: ruby -*-
     # vi: set ft=ruby :
     Vagrant::Config.run do |config|
+    	#to use version 3 you might use lucid32
         config.vm.box = "precise64"
-
         config.vm.box_url = "http://files.vagrantup.com/precise64.box"
-
-
-
         config.vm.network :hostonly, "192.168.33.10"
 
         config.vm.provision :chef_solo do |chef|
@@ -88,6 +88,7 @@ Attributes
 
 See `attributes/default.rb` for default values.
 
+* `default['cloudera']['version']` (defaults to 4, can be set to 3 without yarn support)
 * `default['cloudera']['installyarn']` (defaults to false, set to true if you want to try the new YARN and MR2)
 
 
