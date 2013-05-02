@@ -1,18 +1,3 @@
-# PSEUDEO INSTALL:
-# https://ccp.cloudera.com/display/CDH4DOC/Installing+CDH4+on+a+Single+Linux+Node+in+Pseudo-distributed+Mode#InstallingCDH4onaSingleLinuxNodeinPseudo-distributedMode-InstallingCDH4withYARNonaSingleLinuxNodeinPseudodistributedmode
-
-if node[:platform] == "ubuntu"
-    execute "apt-get update"
-end
-
-# Install required base packages
-package "curl" do
-    action :install
-end
-
-package "wget" do
-    action :install
-end
 
 # Install Cloudera Basic:
 case node[:platform]

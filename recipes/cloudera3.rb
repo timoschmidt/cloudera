@@ -1,20 +1,3 @@
-# PSEUDEO INSTALL:
-#
-
-if node[:platform] == "ubuntu"
-    execute "apt-get update"
-end
-
-# Install required base packages
-package "curl" do
-    action :install
-end
-
-package "wget" do
-    action :install
-end
-
-# Install Cloudera Basic:
 
 execute "curl -s http://archive.cloudera.com/debian/archive.key | sudo apt-key add -"
 
